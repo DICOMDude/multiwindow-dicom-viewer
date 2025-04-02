@@ -304,7 +304,7 @@ function displayLeftCanvas(DicomCanvas, image, pixelData) {
     DicomCanvas.height = image.height
     //DicomCanvas.style.width = 66 + "px";
     //DicomCanvas.style.height = 66 + "px";
-    if (pixelData) renderPixelData2Cnavas(image, pixelData, DicomCanvas);
+    if (pixelData) renderPixelData2Canvas(image, pixelData, DicomCanvas);
     else {
         var ctx = DicomCanvas.getContext("2d");
         var imgData = ctx.createImageData(66, 66);

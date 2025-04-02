@@ -512,57 +512,46 @@ function GetViewportMark(num) {
     return getByid("MarkCanvas" + (num - 0));
 }
 
-function renderPixelData2Cnavas(image, pixelData, canvas, info = {}) {
+function renderPixelData2Canvas(image, pixelData, canvas, info = {}) {
     var ctx = canvas.getContext("2d");
     var imgData = ctx.createImageData(image.width, image.height);
-    //預先填充不透明度為255
+
     new Uint32Array(imgData.data.buffer).fill(0xFF000000);
 
     var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
     var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
     var high = windowCenter + (windowWidth / 2);
     var low = windowCenter - (windowWidth / 2);
-    var intercept = image.intercept;
-    if (CheckNull(intercept)) intercept = 0;
-    var slope = image.slope;
-    if (CheckNull(slope)) slope = 1;
-
-    //未最佳化之版本
-    /*if (image.color == true) {
-        for (var i = imgData.data.length; i >=0 ; i -= 4) {
-            imgData.data[i + 0] = parseInt(((pixelData[i] * slope - low + intercept) / (high - low)) * 255);
-            imgData.data[i + 1] = parseInt(((pixelData[i + 1] * slope - low + intercept) / (high - low)) * 255);
-            imgData.data[i + 2] = parseInt(((pixelData[i + 2] * slope - low + intercept) / (high - low)) * 255);
-            imgData.data[i + 3] = 255;
-        }
-    } else {
-        for (var i = imgData.data.length, j = imgData.data.length/4; i>=0 ; i -= 4, j--) {
-            imgData.data[i + 0] = imgData.data[i + 1] = imgData.data[i + 2] = parseInt(((pixelData[j] * slope - low + intercept) / (high - low)) * 255);
-            imgData.data[i + 3] = 255;
-        }
-    }*/
-    const multiplication = 255 / ((high - low)) * slope;
-    const addition = (- low + intercept) / (high - low) * 255;
     const data = imgData.data;
+
+    const rescaleSlope = image.rescaleSlope;
+    const rescaleIntercept = image.rescaleIntercept;
+
+    // Calculate windowing slope and intercept
+    const slope = 255 / ((high - low));
+    const intercept = (- low) * 255 / (high - low);
+
     if (image.color == true) {
         if (("" + image.PhotometricInterpretation).includes("YBR") || ("" + image.PhotometricInterpretation).includes("RGB")) {
             for (var i = 0, j = 0; i < data.length; i += 4, j += 3) {
-                data[i + 0] = pixelData[j] * multiplication + addition;
-                data[i + 1] = pixelData[j + 1] * multiplication + addition;
-                data[i + 2] = pixelData[j + 2] * multiplication + addition;
+                data[i + 0] = pixelData[j] * rescaleSlope * slope + rescaleIntercept + intercept;
+                data[i + 1] = pixelData[j + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
+                data[i + 2] = pixelData[j + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
             }
         } else {
             for (var i = 0; i < data.length; i += 4) {
-                data[i + 0] = pixelData[i] * multiplication + addition;
-                data[i + 1] = pixelData[i + 1] * multiplication + addition;
-                data[i + 2] = pixelData[i + 2] * multiplication + addition;
+                data[i + 0] = pixelData[i] * rescaleSlope * slope + rescaleIntercept + intercept;
+                data[i + 1] = pixelData[i + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
+                data[i + 2] = pixelData[i + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
             }
         }
     } else {
         for (var i = 0, j = 0; i < data.length; i += 4, j++) {
-            data[i + 0] = data[i + 1] = data[i + 2] = pixelData[j] * multiplication + addition;
+            var hounsfieldUnits = rescaleSlope * pixelData[j] + rescaleIntercept; 
+            data[i + 0] = data[i + 1] = data[i + 2] = hounsfieldUnits * slope + intercept;
         }
     }
+
     ctx.putImageData(imgData, 0, 0);
     var shouldReDraw = false;
     ctx.save();
@@ -607,7 +596,7 @@ function refleshCanvas(viewport) {
     if (!image) return;
     if (canvas.width != image.width) canvas.width = image.width;
     if (canvas.height != image.height) canvas.height = image.height
-    renderPixelData2Cnavas(image, pixelData, canvas, viewport);
+    renderPixelData2Canvas(image, pixelData, canvas, viewport);
     refleshGUI();
 }
 

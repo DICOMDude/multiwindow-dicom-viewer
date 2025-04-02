@@ -402,14 +402,16 @@ function GetPixel(angle2point) {
     var y = parseInt(angle2point[1]);
     var width = GetViewport().width;
     var height = GetViewport().height;
+    const rescaleSlope = GetViewport().content.image.rescaleSlope;
+    const rescaleIntercept = GetViewport().content.image.rescaleIntercept;
     if (GetViewport().transform.PixelSpacingX && GetViewport().transform.PixelSpacingY) {
-        var pixel = GetViewport().content.pixelData[y * width + x];
+        var pixel = GetViewport().content.pixelData[y * width + x] * rescaleSlope + rescaleIntercept;
         if (isNaN(pixel)) return "";
         else return `${pixel} `;
     } else {
-        var pixelR = GetViewport().content.pixelData[y * 4 * width + x * 4 + 0];
-        var pixelG = GetViewport().content.pixelData[y * 4 * width + x * 4 + 1];
-        var pixelB = GetViewport().content.pixelData[y * 4 * width + x * 4 + 2];
+        var pixelR = GetViewport().content.pixelData[y * 4 * width + x * 4 + 0] * rescaleSlope + rescaleIntercept;
+        var pixelG = GetViewport().content.pixelData[y * 4 * width + x * 4 + 1] * rescaleSlope + rescaleIntercept;
+        var pixelB = GetViewport().content.pixelData[y * 4 * width + x * 4 + 2] * rescaleSlope + rescaleIntercept;
         //var pixelA = GetViewport().content.pixelData[y * 4 * width + x * 4 + 3];
         if (isNaN(pixelR) || isNaN(pixelG) || isNaN(pixelB)) return "";
         else return `B=${pixelB} G=${pixelG} R=${pixelR} `;

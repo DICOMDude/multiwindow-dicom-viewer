@@ -102,8 +102,11 @@ function getDefaultImageObj(dataSet, type, url, imageDataLoaded) {
 
     ////////////////////////////
 
-    imageObj.intercept = dataSet.intString('x00281052');
-    imageObj.slope = dataSet.floatString('x00281053');
+    imageObj.rescaleIntercept = dataSet.intString('x00281052');
+    if (CheckNull(imageObj.rescaleIntercept)) imageObj.rescaleIntercept = 0;
+    imageObj.rescaleSlope = dataSet.floatString('x00281053');
+    if (CheckNull(imageObj.rescaleSlope)) imageObj.rescaleSlope = 1;
+
     imageObj.bitsAllocated = dataSet.int16(Tag.BitsAllocated);
     if (dataSet.string('x00280030')) {
         imageObj.rowPixelSpacing = parseFloat(dataSet.string('x00280030').split("\\")[0]);
@@ -167,10 +170,8 @@ function getPixelDataFromDataSet(imageObj, dataSet, frameIndex = 0) {
                 if (pixelData[i] < min) min = pixelData[i];
             }
 
-            var slope = isNaN(imageObj.slope) ? 1 : imageObj.slope;
-            var intercept = isNaN(imageObj.intercept) ? 0 : imageObj.intercept;
-            imageObj.windowCenter = ((max + min) / 2 * slope) + intercept; //(max + min) / 2
-            imageObj.windowWidth = (max - min) * slope; //(max - min)
+            imageObj.windowCenter = ((max + min) / 2 * imageObj.rescaleSlope) + imageObj.rescaleIntercept; //(max + min) / 2
+            imageObj.windowWidth = (max - min) * imageObj.rescaleSlope; //(max - min)
         }
     }
     function YBR(imageObj, dataSet, pixelData) {
