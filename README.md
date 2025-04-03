@@ -18,7 +18,7 @@ See the demo here: https://dicomdude.github.io/multiwindow-dicom-viewer/blueligh
 ## Installation
 - Clone the repository to any location of your choosing
     ```
-  $ git clone https://github.com/jameszhangxiv/multiwindow-dicom-viewer.git
+  $ git clone https://github.com/dicomdude/multiwindow-dicom-viewer.git
   ```
 - Run a local HTTP server. Attempting to run the local files directly will result in CORS errors. Options include VS Code extensions, Python, and more:
   * VS Code extension: https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server
