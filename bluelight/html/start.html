@@ -52,6 +52,7 @@
   <script src="../scripts/plugin/ecg.js"></script>
   <script src="../scripts/newscript/scroll.js" async></script>
   <script src="../scripts/newscript/windowlevel.js" async></script>
+  <script src="../scripts/newscript/multiwindowlevel.js"async></script>
   <script src="../scripts/newscript/rotate.js" async></script>
 
   <script src="../scripts/newscript/measure.js" async></script>
@@ -63,153 +64,150 @@
 <body style="background-color:#000000;" onmousewheel="/*return false;*/">
   <header class="page-header" id="page-header">
     <span id="icon-list">
-      <span id="openFile_span"><img class="img pdf ecg" type="file" alt="Open File" altzhtw="開啟檔案" id="openFile"
+      <span id="openFile_span"><img class="img pdf ecg" type="file" alt="Open File" id="openFile"
           src="../image/icon/lite/openfile.png" width="50" height="50"></span>
-      <span id="MouseOperation_span"><img class="img VR MPR SEG" alt="Move & Zoom" altzhtw="平移與縮放" id="MouseOperation"
+      <span id="MouseOperation_span"><img class="img VR MPR SEG" alt="Move & Zoom" id="MouseOperation"
           src="../image/icon/lite/b_Pan.png" width="50" height="50"></span>
-      <span id="b_Scroll_span"><img class="img MPR" alt="Scroll" altzhtw="捲動" id="b_Scroll"
+      <span id="b_Scroll_span"><img class="img MPR" alt="Scroll" id="b_Scroll"
           src="../image/icon/lite/b_Scroll.png" width="50" height="50"></span>
 
       <span id="SplitParent">
-        <img class="img" alt="Split Screen" altzhtw="分隔" id="SplitWindow"
+        <img class="img" alt="Split Screen" id="SplitWindow"
           src="../image/icon/lite/b_LayoutWithinViewport.png" width="50" height="50">
         <div id="openSplitWindowDiv" class="drawer" style="position:absolute;left: 0;white-space:nowrap;z-index: 100;
               width: 500; display: none;"></div>
       </span>
       <span id="TransformationsImgParent">
-        <img class="img" id="openTransformationsImg" altzhtw="Transformations" alt="Transformations"
+        <img class="img" id="openTransformationsImg" alt="Transformations"
           src="../image/icon/lite/b_Transformations.png" width="50" height="50">
         <div id="openTransformationsDiv" class="drawer" style="position:absolute;left: 0;white-space:nowrap;z-index: 100;
           width: 500; display: none;background-color: black;">
-          <span id="horizontal_flip_span"><img alt="Horizontal Flip" class="innerimg" loading="lazy" altzhtw="水平翻轉"
+          <span id="horizontal_flip_span"><img alt="Horizontal Flip" class="innerimg" loading="lazy"
               id="horizontal_flip" src="../image/icon/lite/b_FlipHorizontally.png" width="50" height="50"></span>
-          <span id="vertical_flip_span"><img altzhtw="垂直翻轉" class="innerimg" loading="lazy" alt="Vertical Flip"
+          <span id="vertical_flip_span"><img class="innerimg" loading="lazy" alt="Vertical Flip"
               id="vertical_flip" src="../image/icon/lite/b_FlipVertically.png" width="50" height="50"></span>
-          <span id="MouseRotate_span"><img class="innerimg" loading="lazy" alt="rotate" altzhtw="旋轉" id="MouseRotate"
+          <span id="MouseRotate_span"><img class="innerimg" loading="lazy" alt="rotate" id="MouseRotate"
               src="../image/icon/lite/b_Rotate 90 degrees clockwise.png" width="50" height="50"></span>
           <br>
-          <span id="rotate0_span"><img class="innerimg" loading="lazy" altzhtw="旋轉0度" alt="rotate 0" id="Rotate_0"
+          <span id="rotate0_span"><img class="innerimg" loading="lazy" alt="rotate 0" id="Rotate_0"
               src="../image/icon/lite/b_Rotate_0.png" width="50" height="50"></span>
-          <span id="rotatei90_span"><img class="innerimg" loading="lazy" altzhtw="旋轉-90度" alt="rotate 90"
+          <span id="rotatei90_span"><img class="innerimg" loading="lazy" alt="rotate 90"
               id="Rotate_i90" src="../image/icon/lite/b_Rotate_90.png" width="50" height="50"></span>
-          <span id="rotate90_span"><img class="innerimg" loading="lazy" altzhtw="旋轉90度" alt="rotate 90" id="Rotate_90"
+          <span id="rotate90_span"><img class="innerimg" loading="lazy" alt="rotate 90" id="Rotate_90"
               class="filpx" src="../image/icon/lite/b_Rotate_i90.png" width="50" height="50"></span>
 
-          <!--<span id="rotate180_span"><img altzhtw="旋轉180度" alt="rotate 180" id="Rotate_180"
-              src="../image/icon/lite/b_Rotate_180.png" width="50" height="50"></span>
-          <span id="rotate270_span"><img altzhtw="旋轉270度" alt="rotate 270" id="Rotate_90"
-              src="../image/icon/lite/b_Rotate_270.png" width="50" height="50"></span>-->
         </div>
       </span>
       <span id="WindowRevisionParent">
-        <span id="WindowRevision_span"><img class="cropimg VR MPR SEG" alt="Window Level" altzhtw="Window Level"
+        <span id="WindowRevision_span"><img class="cropimg VR MPR SEG" alt="Window Level"
             id="WindowRevision" src="../image/icon/lite/b_Window_Presets_left.png" width="38" height="50"></span>
         <span id="WindowRevisionOption_span">
-          <img class="cropimg VR MPR SEG" alt="Window Level" altzhtw="Window Level" id="WindowRevisionOption"
+          <img class="cropimg VR MPR SEG" alt="Window Level" id="WindowRevisionOption"
             src="../image/icon/lite/b_Window_Presets_right.png" width="12" height="50"></span>
         <div id="openWindowRevisionDiv" class="drawer" style="position:absolute;left: 0;white-space:nowrap;z-index: 100;
               width: 500; display: none;">
           <div class="WindowSelect" id="WindowDefault">Default</div>
           <div class="WindowSelect" id="WindowCustom">Custom</div>
-          <div class="WindowSelect" id="WindowAbdomen" wc="60" ww="400">Abdomen(60,400)</div>
+          <div class="WindowSelect" id="WindowMulti">Multi-Window</div>
+          <div class="WindowSelect" id="WindowAbdomen" wc="50" ww="400">Abdomen(50,400)</div>
           <div class="WindowSelect" id="WindowAngio" wc="300" ww="600">Angio(300,600)</div>
-          <div class="WindowSelect" id="WindowBone" wc="300" ww="1500">Bone(300,1500)</div>
+          <div class="WindowSelect" id="WindowBone" wc="400" ww="1800">Bone(400,1800)</div>
           <div class="WindowSelect" id="WindowBrain" wc="40" ww="80">Brain(40,80)</div>
           <div class="WindowSelect" id="WindowChest" wc="40" ww="400">Chest(40,400)</div>
-          <div class="WindowSelect" id="WindowLungs" wc="-400" ww="1500">Lungs(-400,1500)</div>
+          <div class="WindowSelect" id="WindowLungs" wc="-600" ww="1500">Lungs(-600,1500)</div>
         </div>
       </span>
-      <span id="zoom_span"><img class="img" altzhtw="放大鏡" alt="Zoom" id="zoom" src="../image/icon/lite/b_Zoom.png"
+      <span id="zoom_span"><img class="img" alt="Zoom" id="zoom" src="../image/icon/lite/b_Zoom.png"
           width="50" height="50"></span>
 
-      <span id="color_invert_span"><img class="img" altzhtw="色彩反轉" alt="Color Invert" id="color_invert"
+      <span id="color_invert_span"><img class="img" alt="Color Invert" id="color_invert"
           src="../image/icon/lite/b_InvertGrayscale.png" width="50" height="50"></span>
-      <span id="unlink_span"><img class="img" altzhtw="同步操作" alt="Synchronous Operation" id="unlink"
+      <span id="unlink_span"><img class="img" alt="Synchronous Operation" id="unlink"
           src="../image/icon/lite/b_unlink translation synchronization.png" width="50" height="50"></span>
-      <span id="reset_span"><img class="img" altzhtw="恢復原狀" alt="Restore Img" id="resetImg"
+      <span id="reset_span"><img class="img" alt="Restore Img" id="resetImg"
           src="../image/icon/lite/b_DisplayReset.png" width="50" height="50"></span>
       <span id="MeasureImgParent">
-        <img class="img" id="openMeasureImg" altzhtw="測量" alt="Measure" src="../image/icon/lite/M.png" width="50"
+        <img class="img" id="openMeasureImg" alt="Measure" src="../image/icon/lite/M.png" width="50"
           height="50">
         <div id="openMeasureDIv" class="drawer" style="position:absolute;left: 0;white-space:nowrap;z-index: 100;
         width: 500; display: none;background-color: black;">
           <span id="removeAllRuler_span">
-            <img alt="remove all" altzhtw="清除所有測量" class="innerimg" loading="lazy" id="removeAllRuler"
+            <img alt="remove all" class="innerimg" loading="lazy" id="removeAllRuler"
               src="../image/icon/lite/b_trashcan.png" width="50" height="50">
           </span>
           <span id="removeRuler_span">
-            <img alt="remove" altzhtw="清除測量" class="innerimg" loading="lazy" id="removeRuler"
+            <img alt="remove" class="innerimg" loading="lazy" id="removeRuler"
               src="../image/icon/lite/X.png" width="50" height="50">
           </span>
           <span id="eraseRuler_span">
-            <img alt="eraser" altzhtw="橡皮擦" class="innerimg" loading="lazy" id="eraseRuler"
+            <img alt="eraser" class="innerimg" loading="lazy" id="eraseRuler"
               src="../image/icon/lite/b_Eraser.png" width="50" height="50">
           </span>
           <span id="MeasureRuler_span">
-            <img alt="measure" altzhtw="測量" class="innerimg" loading="lazy" id="MeasureRuler"
+            <img alt="measure" class="innerimg" loading="lazy" id="MeasureRuler"
               src="../image/icon/lite/b_DistanceMeasurement.png" width="50" height="50">
           </span>
           <span id="AngleRuler_span">
-            <img alt="angle" altzhtw="角度" class="innerimg" loading="lazy" id="AngleRuler"
+            <img alt="angle" class="innerimg" loading="lazy" id="AngleRuler"
               src="../image/icon/lite/b_AngleMeasurement.png" width="50" height="50">
           </span>
           <br>
           <span id="AngleRuler_span2">
-            <img alt="angle" altzhtw="角度" class="innerimg" loading="lazy" id="AngleRuler2"
+            <img alt="angle" class="innerimg" loading="lazy" id="AngleRuler2"
               src="../image/icon/lite/b_AngleMeasurement2.png" width="50" height="50">
           </span>
           <span id="RectRuler_span">
-            <img alt="Rect shape" altzhtw="矩形" class="innerimg" loading="lazy" id="RectRuler"
+            <img alt="Rect shape" class="innerimg" loading="lazy" id="RectRuler"
               src="../image/icon/lite/b_RectMeasurement.png" width="50" height="50">
           </span>
           <span id="CircleRuler_span">
-            <img alt="Circle shape" altzhtw="圓形" class="innerimg" loading="lazy" id="CircleRuler"
+            <img alt="Circle shape" class="innerimg" loading="lazy" id="CircleRuler"
               src="../image/icon/lite/b_CircleMeasurement.png" width="50" height="50">
           </span>
           <span id="IrregularRuler_span">
-            <img alt="irregular shape" altzhtw="不規則形狀" class="innerimg" loading="lazy" id="IrregularRuler"
+            <img alt="irregular shape" class="innerimg" loading="lazy" id="IrregularRuler"
               src="../image/icon/lite/irregular.png" width="50" height="50">
           </span>
           <br>
           <span id="arrowRuler_span">
-            <img alt="arrow" altzhtw="箭頭" class="innerimg" loading="lazy" id="ArrowRuler"
+            <img alt="arrow" class="innerimg" loading="lazy" id="ArrowRuler"
               src="../image/icon/lite/b_arrow.png" width="50" height="50">
           </span>
           <span id="TextAnnotation_span">
-            <img alt="text annotation" altzhtw="文字註解" class="innerimg" loading="lazy" id="TextAnnotation"
+            <img alt="text annotation" class="innerimg" loading="lazy" id="TextAnnotation"
               src="../image/icon/lite/T.png" width="50" height="50">
           </span>
         </div>
       </span>
 
-      <span id="playvideo_span"><img class="img" loading="lazy" altzhtw="播放" alt="Cine" id="playvideo"
+      <span id="playvideo_span"><img class="img" loading="lazy" alt="Cine" id="playvideo"
           src="../image/icon/lite/b_CinePlay.png" width="50" height="50"></span>
-      <span id="MarkButton_span"><img class="img VR MPR" loading="lazy" altzhtw="標記" alt="Display Mark" id="MarkButton"
+      <span id="MarkButton_span"><img class="img VR MPR" loading="lazy" alt="Display Mark" id="MarkButton"
           src="../image/icon/lite/fist0.png" width="50" height="50"></span>
       <span id="annotation_span"><img class="img" loading="lazy" alt="Annotation" id="annotation"
           src="../image/icon/lite/b_Annotation.png" width="50" height="50"></span>
       <span id="MarkupImg_span"><img class="img VR MPR RTSS" loading="lazy" alt="Markup & Annotation" id="MarkupImg"
           src="../image/icon/lite/b_ShowReport.png" width="50" height="50"></span>
       <span id="OtherImgParent">
-        <img class="img" loading="lazy" altzhtw="其他" alt="other" id="OtherImg" src="../image/icon/lite/b_CineTools.png"
+        <img class="img" loading="lazy" alt="other" id="OtherImg" src="../image/icon/lite/b_CineTools.png"
           width="50" height="50">
         <div id="othereDIv" class="drawer" style="position:absolute;left: 0;white-space:nowrap;z-index: 100;
            width: 500; display: none;background-color: black;">
           <span id="clearViewport_span">
-            <img altzhtw="清除視窗" alt="clear viewport" class="innerimg" loading="lazy" id="clearviewportImg"
+            <img alt="clear viewport" class="innerimg" loading="lazy" id="clearviewportImg"
               src="../image/icon/lite/b_trashcan.png" width="50" height="50">
           </span> <br>
           <span id="TrueSize_span">
-            <img altzhtw="真實大小" alt="true size" class="innerimg" loading="lazy" id="TrueSizeImg"
+            <img alt="true size" class="innerimg" loading="lazy" id="TrueSizeImg"
               src="../image/icon/lite/b_TrueSize.png" width="50" height="50">
             <br>
           </span>
           <span id="downloadImg_span">
-            <img altzhtw="下載圖片" alt="download image" class="innerimg" loading="lazy" id="downloadImg"
+            <img alt="download image" class="innerimg" loading="lazy" id="downloadImg"
               src="../image/icon/lite/download_img.png" width="50" height="50">
           </span> <br>
           <span id="downloadDcm_span">
-            <img altzhtw="下載DICOM" alt="download DICOM" class="innerimg" loading="lazy" id="downloadDcm"
+            <img alt="download DICOM" class="innerimg" loading="lazy" id="downloadDcm"
               src="../image/icon/lite/download_dcm.png" width="50" height="50">
           </span>
       </span>

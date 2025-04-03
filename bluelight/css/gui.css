@@ -12,6 +12,8 @@
   --ishaveLeftScroll: 0;
 
   --globalPadding:1px;
+
+  --default-font: 'Lato', sans-serif;
 }
 
 html, body {
@@ -19,6 +21,7 @@ html, body {
   padding: var(--globalPadding);
   width:  calc(100% - var(--globalPadding));
   height: calc(100% - var(--globalPadding));
+  font-family: var(--default-font);
 }
 
 .labelLT {
@@ -107,7 +110,7 @@ html {
 
 .SelectedViewport {
   background-color: rgb(10, 6, 6);
-  border: var(--bordersize) #FFC3FF groove;
+  border: var(--bordersize) #68f574 groove;
 }
 
 .page {
@@ -268,7 +271,7 @@ button:hover {
 }
 
 .OutLeftImg {
-  border: var(--bordersize) #FFA3FF groove;
+  border: var(--bordersize) #68f574 groove;
   padding: 1px 1px 1px 1px;
 }
 

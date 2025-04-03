@@ -1,14 +1,12 @@
-//Viewport的總數量
 const Viewport_Total = 16;
-//Viewport的即時數量
 let Viewport_row = 1;
 let Viewport_col = 1;
 
-//表示Viewport為連接狀態
+// Viewport connection status
 var openLink = false;
 var openECG = false;
 
-//目前選取的Viewport是第幾個Viewport
+// Currently selected viewport
 var viewportNumber = 0;
 
 let ViewPortList = [];
@@ -57,6 +55,7 @@ class BlueLightViewPort {
 
         this.windowCenter = null;
         this.windowWidth = null;
+        this.multiWindow = false;
 
         this.transform = {};
         this.drawMark = true;
@@ -86,6 +85,7 @@ class BlueLightViewPort {
 
         this.windowCenter = null;
         this.windowWidth = null;
+        this.multiWindow = false;
 
         this.transform = {};
         this.drawMark = true;
@@ -517,40 +517,65 @@ function renderPixelData2Canvas(image, pixelData, canvas, info = {}) {
     var imgData = ctx.createImageData(image.width, image.height);
 
     new Uint32Array(imgData.data.buffer).fill(0xFF000000);
-
-    var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
-    var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
-    var high = windowCenter + (windowWidth / 2);
-    var low = windowCenter - (windowWidth / 2);
     const data = imgData.data;
-
     const rescaleSlope = image.rescaleSlope;
     const rescaleIntercept = image.rescaleIntercept;
 
-    // Calculate windowing slope and intercept
-    const slope = 255 / ((high - low));
-    const intercept = (- low) * 255 / (high - low);
+    // Standard windowing
+    if (info.multiWindow == false) {
+        var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
+        var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
+        var high = windowCenter + (windowWidth / 2);
+        var low = windowCenter - (windowWidth / 2);
 
-    if (image.color == true) {
-        if (("" + image.PhotometricInterpretation).includes("YBR") || ("" + image.PhotometricInterpretation).includes("RGB")) {
-            for (var i = 0, j = 0; i < data.length; i += 4, j += 3) {
-                data[i + 0] = pixelData[j] * rescaleSlope * slope + rescaleIntercept + intercept;
-                data[i + 1] = pixelData[j + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
-                data[i + 2] = pixelData[j + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
+        // Calculate windowing slope and intercept
+        const slope = 255 / ((high - low));
+        const intercept = (- low) * 255 / (high - low);
+
+        if (image.color == true) {
+            if (("" + image.PhotometricInterpretation).includes("YBR") || ("" + image.PhotometricInterpretation).includes("RGB")) {
+                for (var i = 0, j = 0; i < data.length; i += 4, j += 3) {
+                    data[i + 0] = pixelData[j] * rescaleSlope * slope + rescaleIntercept + intercept;
+                    data[i + 1] = pixelData[j + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
+                    data[i + 2] = pixelData[j + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
+                }
+            } else {
+                for (var i = 0; i < data.length; i += 4) {
+                    data[i + 0] = pixelData[i] * rescaleSlope * slope + rescaleIntercept + intercept;
+                    data[i + 1] = pixelData[i + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
+                    data[i + 2] = pixelData[i + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
+                }
             }
         } else {
-            for (var i = 0; i < data.length; i += 4) {
-                data[i + 0] = pixelData[i] * rescaleSlope * slope + rescaleIntercept + intercept;
-                data[i + 1] = pixelData[i + 1] * rescaleSlope * slope + rescaleIntercept + intercept;
-                data[i + 2] = pixelData[i + 2] * rescaleSlope * slope + rescaleIntercept + intercept;
+            for (var i = 0, j = 0; i < data.length; i += 4, j++) {
+                var hounsfieldUnits = rescaleSlope * pixelData[j] + rescaleIntercept; 
+                data[i + 0] = data[i + 1] = data[i + 2] = hounsfieldUnits * slope + intercept;
             }
         }
-    } else {
+    } 
+    // Multiwindowing
+    else {
+        var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
+        var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
+        var high = windowCenter + (windowWidth / 2);
+        var low = windowCenter - (windowWidth / 2);
+
+        // Calculate windowing slope and intercept
+        const slope = 255 / ((high - low));
+        const intercept = (- low) * 255 / (high - low);
+
         for (var i = 0, j = 0; i < data.length; i += 4, j++) {
             var hounsfieldUnits = rescaleSlope * pixelData[j] + rescaleIntercept; 
-            data[i + 0] = data[i + 1] = data[i + 2] = hounsfieldUnits * slope + intercept;
+            if (hounsfieldUnits < 0 ) {
+                data[i + 0] = data[i + 1] = data[i + 2] = 0;
+            } else if (hounsfieldUnits > 500) {
+                data[i + 0] = data[i + 1] = data[i + 2] = 255;
+            } else {
+                data[i + 0] = data[i + 1] = data[i + 2] = 128;//hounsfieldUnits * slope + intercept;
+            }
         }
     }
+    
 
     ctx.putImageData(imgData, 0, 0);
     var shouldReDraw = false;

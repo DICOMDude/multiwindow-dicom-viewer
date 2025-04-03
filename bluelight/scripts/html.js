@@ -697,25 +697,102 @@ function html_onload() {
   for (var obj of getClass("WindowSelect")) {
     obj.onclick = function () {
       if (this.id == "WindowDefault") {
+        GetViewport().multiWindow = false;
         getByid("textWC").value = GetViewport().windowCenter = GetViewport().content.image.windowCenter;
         getByid("textWW").value = GetViewport().windowWidth = GetViewport().content.image.windowWidth;
         if (openLink) SetAllViewport("windowCenter", GetViewport().windowCenter);
         if (openLink) SetAllViewport("windowWidth", GetViewport().windowWidth);
       }
       else if (this.id == "WindowCustom") {
-        getByid("WindowRevision").click()
+        GetViewport().multiWindow = false;
+        getByid("WindowRevision").click();
         return;
       }
+      else if (this.id == "WindowMulti") {
+        multiWindow();
+      }
       else {
+        GetViewport().multiWindow = false;
         GetViewport().windowCenter = getByid("textWC").value = parseInt(this.getAttribute('wc'));
         GetViewport().windowWidth = getByid("textWW").value = parseInt(this.getAttribute('ww'));
         if (openLink) SetAllViewport("windowCenter", GetViewport().windowCenter);
         if (openLink) SetAllViewport("windowWidth", GetViewport().windowWidth);
       }
+      setWindowLevel();
       refleshViewport();
-      WindowOpen = true;
       hideAllDrawer();
     }
+  }
+
+  // getByid("WindowRevision").onclick = function () {
+  //   if (this.enable == false) return;
+  //   hideAllDrawer("windowlevel");
+  //   set_BL_model('windowlevel');
+  //   windowlevel();
+  //   drawBorder(this);
+  //   getByid("textWC").value = GetViewport().windowCenter;
+  //   getByid("textWW").value = GetViewport().windowWidth;
+  // }
+
+
+  function multiWindow () {
+    var multiWindowInterface = document.createElement("DIV");
+    multiWindowInterface.style.width = "40vw";
+    multiWindowInterface.style.height = "40vh";
+    multiWindowInterface.style.position = "absolute";
+    multiWindowInterface.style.zIndex = "105";
+    multiWindowInterface.style.left = "0";
+    multiWindowInterface.style.right = "0";
+    multiWindowInterface.style.top = "0";
+    multiWindowInterface.style.bottom = "0";
+    multiWindowInterface.style.margin = "auto";
+    multiWindowInterface.style.backgroundColor = "rgba(30,60,90,0.8)";
+    multiWindowInterface.style["display"] = "flex";
+    multiWindowInterface.style["justify-content"] = "center";
+    getByid("container").appendChild(multiWindowInterface);
+
+    var label = document.createElement("LABEL");
+    label.innerText = "Enter Window Centers and Widths";
+    label.style['color'] = "white";
+    label.style['position'] = "absolute";
+    label.style['font-size'] = "24px";
+    label.style['user-select'] = "none";
+    multiWindowInterface.appendChild(label);
+
+    var canvas = document.createElement("CANVAS");
+    canvas.id = "multiWindowCanvas";
+
+    // canvas.style.width = canvas.getBoundingClientRect().width;
+    // canvas.style.height = canvas.getBoundingClientRect().height;
+    canvas.style.top = "30px";
+    canvas.style.position = "absolute";
+    canvas.width = 200;
+    canvas.height = 200; 
+    canvas.style.backgroundColor = "rgba(88, 88, 88, 0.8)";
+    multiWindowInterface.appendChild(canvas);
+    multiWindowLevel(canvas);
+
+
+    var btn_confirm = document.createElement("BUTTON");
+    btn_confirm.style.cssText = "top: 80%;left: 25%;transform: scale(1.5);position: absolute;"
+    btn_confirm.innerText = "Confirm";
+    btn_confirm.window = multiWindowInterface;
+    multiWindowInterface.appendChild(btn_confirm);
+
+    var btn_cancel = document.createElement("BUTTON");
+    btn_cancel.style.cssText = "top: 80%;left: 75%;transform: scale(1.5);position: absolute;"
+    btn_cancel.innerText = "Cancel";
+    btn_cancel.window = multiWindowInterface;
+    multiWindowInterface.appendChild(btn_cancel);
+
+    
+
+    btn_cancel.onclick = function () { getByid("container").removeChild(this.window); };
+    btn_confirm.onclick = function () { 
+      GetViewport().multiWindow = true;
+      getByid("container").removeChild(this.window);
+      refleshViewport();
+    };
   }
 
   /*getByid("WindowLevelSelect").onchange = function () {
@@ -725,7 +802,6 @@ function html_onload() {
       if (openLink) SetAllViewport("windowCenter", GetViewport().windowCenter);
       if (openLink) SetAllViewport("windowWidth", GetViewport().windowWidth);
       refleshViewport();
-      WindowOpen = true;
       return;
     }
     for (var i = 0; i < getClass("WindowSelect").length; i++) {
@@ -735,7 +811,6 @@ function html_onload() {
         if (openLink) SetAllViewport("windowCenter", GetViewport().windowCenter);
         if (openLink) SetAllViewport("windowWidth", GetViewport().windowWidth);
         refleshViewport();
-        WindowOpen = true;
         break;
       }
     }
@@ -746,7 +821,6 @@ function html_onload() {
     getByid("WindowCustom").selected = true;
     if (openLink) SetAllViewport("windowCenter", GetViewport().windowCenter);
     refleshViewport();
-    WindowOpen = true;
   }
 
   getByid("textWW").onchange = function () {
@@ -754,7 +828,6 @@ function html_onload() {
     getByid("WindowCustom").selected = true;
     if (openLink) SetAllViewport("windowWidth", GetViewport().windowWidth);
     refleshViewport();
-    WindowOpen = true;
   }
 
   getByid("labelZoom").onchange = function () {
@@ -860,13 +933,6 @@ function onElementOver(OriginElem) {
   var label = document.createElement("label");
 
   if (OriginElem.getAttribute("alt")) label.innerHTML = OriginElem.getAttribute("alt");
-
-
-  var userLanguage = navigator.language || navigator.userLanguage;
-
-  if (userLanguage && userLanguage.toLowerCase() == "zh-tw") {
-    if (OriginElem.getAttribute("altzhtw")) label.innerHTML = OriginElem.getAttribute("altzhtw");
-  }
 
   label.id = "tooltiptext_img";
   // 將 label 元素添加到按鈕的父元素中

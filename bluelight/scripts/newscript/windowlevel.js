@@ -1,12 +1,8 @@
-
-//表示按下WindowLevel調整
+// Indicates Window Adjustment button was pressed
 var openWindow = false;
 
-//表示現在正在調整WindowLevel
-var WindowOpen = false;
-
 function windowlevel() {
-    if (BL_mode == 'windowlevel') {
+    if (BL_mode == 'windowlevel' && GetViewport().multiWindow == false) {
         
         ShowElemByID(["textWC", "textWW", "WindowLevelDiv"]);
         openWindow = true;
@@ -50,7 +46,6 @@ function windowlevel() {
                     }
                     setWindowLevel();
                     refleshViewport();
-                    WindowOpen = true;
                 }
             }
         });
@@ -91,7 +86,6 @@ function windowlevel() {
                 }
                 setWindowLevel();
                 refleshViewport();
-                WindowOpen = true;
             }
         });
     }
