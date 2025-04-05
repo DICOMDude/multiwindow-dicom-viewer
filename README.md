@@ -28,7 +28,8 @@ See the demo here: https://dicomdude.github.io/multiwindow-dicom-viewer/blueligh
     python3 -m http.server
     ```
   * Node.js HTTP server: https://www.npmjs.com/package/http-server 
-
+- Navigate to the following URL on any browser: http://localhost:8000/bluelight/html/start.html
+  
 <a name="references"></a>
 ## References
 1. Chen, TT., Sun, YC., Chu, WC. et al. BlueLight: An Open Source DICOM Viewer Using Low-Cost Computation Algorithm Implemented with JavaScript Using Advanced Medical Imaging Visualization. J Digit Imaging 36, 753–763 (2023). https://doi.org/10.1007/s10278-022-00746-0
