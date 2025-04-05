@@ -790,6 +790,9 @@ function html_onload() {
     btn_cancel.onclick = function () { getByid("container").removeChild(this.window); };
     btn_confirm.onclick = function () { 
       GetViewport().multiWindow = true;
+      GetViewport().multiWindows = pointsToWindows();
+      console.log(GetViewport().multiWindows);
+      printPoints();
       getByid("container").removeChild(this.window);
       refleshViewport();
     };

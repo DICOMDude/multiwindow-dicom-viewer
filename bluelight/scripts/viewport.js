@@ -56,6 +56,7 @@ class BlueLightViewPort {
         this.windowCenter = null;
         this.windowWidth = null;
         this.multiWindow = false;
+        this.multiWindows = null;
 
         this.transform = {};
         this.drawMark = true;
@@ -86,6 +87,7 @@ class BlueLightViewPort {
         this.windowCenter = null;
         this.windowWidth = null;
         this.multiWindow = false;
+        this.multiWindows = null;
 
         this.transform = {};
         this.drawMark = true;
@@ -521,8 +523,16 @@ function renderPixelData2Canvas(image, pixelData, canvas, info = {}) {
     const rescaleSlope = image.rescaleSlope;
     const rescaleIntercept = image.rescaleIntercept;
 
-    // Standard windowing
-    if (info.multiWindow == false) {
+    // Multi windowing
+    if (info.multiWindow == true) {
+        if (info.multiWindows == null) console.log("ERROR");
+        for (var i = 0, j = 0; i < data.length; i += 4, j++) {
+            var hounsfieldUnits = rescaleSlope * pixelData[j] + rescaleIntercept; 
+            data[i + 0] = data[i + 1] = data[i + 2] = HFToDisplayValue(hounsfieldUnits, info.multiWindows);
+        }
+
+    // Standard windowing    
+    } else {
         var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
         var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
         var high = windowCenter + (windowWidth / 2);
@@ -553,30 +563,7 @@ function renderPixelData2Canvas(image, pixelData, canvas, info = {}) {
             }
         }
     } 
-    // Multiwindowing
-    else {
-        var windowCenter = info.windowCenter ? info.windowCenter : image.windowCenter;
-        var windowWidth = info.windowWidth ? info.windowWidth : image.windowWidth;
-        var high = windowCenter + (windowWidth / 2);
-        var low = windowCenter - (windowWidth / 2);
-
-        // Calculate windowing slope and intercept
-        const slope = 255 / ((high - low));
-        const intercept = (- low) * 255 / (high - low);
-
-        for (var i = 0, j = 0; i < data.length; i += 4, j++) {
-            var hounsfieldUnits = rescaleSlope * pixelData[j] + rescaleIntercept; 
-            if (hounsfieldUnits < 0 ) {
-                data[i + 0] = data[i + 1] = data[i + 2] = 0;
-            } else if (hounsfieldUnits > 500) {
-                data[i + 0] = data[i + 1] = data[i + 2] = 255;
-            } else {
-                data[i + 0] = data[i + 1] = data[i + 2] = 128;//hounsfieldUnits * slope + intercept;
-            }
-        }
-    }
     
-
     ctx.putImageData(imgData, 0, 0);
     var shouldReDraw = false;
     ctx.save();
