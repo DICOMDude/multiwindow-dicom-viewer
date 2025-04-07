@@ -761,9 +761,7 @@ function html_onload() {
 
     var canvas = document.createElement("CANVAS");
     canvas.id = "multiWindowCanvas";
-
-    // canvas.style.width = canvas.getBoundingClientRect().width;
-    // canvas.style.height = canvas.getBoundingClientRect().height;
+    
     canvas.style.top = "30px";
     canvas.style.position = "absolute";
     canvas.width = 200;
