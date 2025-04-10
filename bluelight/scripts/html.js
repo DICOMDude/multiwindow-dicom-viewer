@@ -737,8 +737,8 @@ function html_onload() {
 
   function multiWindow () {
     var multiWindowInterface = document.createElement("DIV");
-    multiWindowInterface.style.width = "40vw";
-    multiWindowInterface.style.height = "40vh";
+    multiWindowInterface.style.width = "400px";
+    multiWindowInterface.style.height = "325px";
     multiWindowInterface.style.position = "absolute";
     multiWindowInterface.style.zIndex = "105";
     multiWindowInterface.style.left = "0";
@@ -752,7 +752,7 @@ function html_onload() {
     getByid("container").appendChild(multiWindowInterface);
 
     var label = document.createElement("LABEL");
-    label.innerText = "Enter Window Centers and Widths";
+    label.innerText = "Multiwindowing Curve";
     label.style['color'] = "white";
     label.style['position'] = "absolute";
     label.style['font-size'] = "24px";
@@ -762,7 +762,7 @@ function html_onload() {
     var canvas = document.createElement("CANVAS");
     canvas.id = "multiWindowCanvas";
     
-    canvas.style.top = "30px";
+    canvas.style.top = "50px";
     canvas.style.position = "absolute";
     canvas.width = 200;
     canvas.height = 200; 
@@ -770,20 +770,17 @@ function html_onload() {
     multiWindowInterface.appendChild(canvas);
     multiWindowLevel(canvas);
 
-
     var btn_confirm = document.createElement("BUTTON");
-    btn_confirm.style.cssText = "top: 80%;left: 25%;transform: scale(1.5);position: absolute;"
+    btn_confirm.style.cssText = "top: 280px;left: 100px;transform: scale(1.5);position: absolute;"
     btn_confirm.innerText = "Confirm";
     btn_confirm.window = multiWindowInterface;
     multiWindowInterface.appendChild(btn_confirm);
 
     var btn_cancel = document.createElement("BUTTON");
-    btn_cancel.style.cssText = "top: 80%;left: 75%;transform: scale(1.5);position: absolute;"
+    btn_cancel.style.cssText = "top: 280px;left: 250px;transform: scale(1.5);position: absolute;"
     btn_cancel.innerText = "Cancel";
     btn_cancel.window = multiWindowInterface;
     multiWindowInterface.appendChild(btn_cancel);
-
-    
 
     btn_cancel.onclick = function () { getByid("container").removeChild(this.window); };
     btn_confirm.onclick = function () { 
